@@ -16,39 +16,38 @@ export default function Home() {
       { id: "services", label: "Services" },
       { id: "how", label: "How it works" },
       { id: "features", label: "Why Konvag" },
-      { id: "faq", label: "FAQ" },
     ],
     [],
   );
 
-  const services = useMemo(
+  // Keep list short (landing page shouldn't feel like a directory)
+  const topServices = useMemo(
     () => [
       { title: "Plumbing", icon: "droplet" },
       { title: "Electrician", icon: "bolt" },
-      { title: "Carpentry", icon: "hammer" },
-      { title: "Painting", icon: "brush" },
-      { title: "AC Repair", icon: "snow" },
       { title: "Cleaning", icon: "sparkles" },
-      { title: "Laundry", icon: "wash" },
+      { title: "AC Repair", icon: "snow" },
       { title: "Generator Repair", icon: "engine" },
-      { title: "Phone Repair", icon: "phone" },
       { title: "Laptop Repair", icon: "laptop" },
-      { title: "TV Repair", icon: "tv" },
+      { title: "Phone Repair", icon: "phone" },
       { title: "CCTV & Security", icon: "shield" },
       { title: "Hair Dressing", icon: "scissors" },
       { title: "Barbing", icon: "clipper" },
       { title: "Makeup", icon: "palette" },
-      { title: "Nails & Spa", icon: "lotus" },
-      { title: "Tailoring", icon: "thread" },
-      { title: "Photography", icon: "camera" },
-      { title: "Catering", icon: "chef" },
-      { title: "Event Decor", icon: "confetti" },
-      { title: "Auto Mechanic", icon: "car" },
-      { title: "Car Wash", icon: "spray" },
       { title: "Logistics", icon: "truck" },
-      { title: "Tutoring", icon: "book" },
-      { title: "Fitness Coach", icon: "dumbbell" },
-      { title: "Web & Design", icon: "code" },
+    ],
+    [],
+  );
+
+  const popular = useMemo(
+    () => [
+      "Electrician",
+      "Plumbing",
+      "Cleaning",
+      "Barbing",
+      "AC Repair",
+      "Laptop Repair",
+      "CCTV",
     ],
     [],
   );
@@ -70,10 +69,9 @@ export default function Home() {
   };
 
   useEffect(() => {
-    document.title =
-      "Konvag — All services at your fingertips (Under Construction)";
+    document.title = "Konvag — Book trusted services (Under Construction)";
 
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
 
@@ -82,10 +80,14 @@ export default function Home() {
       "(prefers-color-scheme: dark)",
     )?.matches;
     const shouldBeDark = saved ? saved === "dark" : !!prefersDark;
+
     setDark(shouldBeDark);
     document.documentElement.classList.toggle("dark", shouldBeDark);
 
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (toastTimer.current) window.clearTimeout(toastTimer.current);
+    };
   }, []);
 
   const toggleTheme = () => {
@@ -95,530 +97,12 @@ export default function Home() {
     window.localStorage.setItem("konvag_theme", next ? "dark" : "light");
   };
 
-  const Icon = ({ name }: { name: string }) => {
-    const common = "stroke-current";
-    switch (name) {
-      case "bolt":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M13 2L3 14h9l-1 8 10-12h-9l1-8Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-          </svg>
-        );
-      case "droplet":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M12 2s7 7.3 7 13a7 7 0 1 1-14 0c0-5.7 7-13 7-13Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-          </svg>
-        );
-      case "shield":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M12 2l8 4v7c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M9 12l2 2 4-5" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "sparkles":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M12 2l1.2 5.1L18 8.3l-4.8 1.2L12 14l-1.2-4.5L6 8.3l4.8-1.2L12 2Z"
-              strokeWidth="1.6"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M19 13l.7 3 3 1-3 1-.7 3-.7-3-3-1 3-1 .7-3Z"
-              strokeWidth="1.6"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M4.5 13l.6 2.3 2.4.8-2.4.8-.6 2.3-.6-2.3-2.4-.8 2.4-.8.6-2.3Z"
-              strokeWidth="1.6"
-              strokeLinejoin="round"
-            />
-          </svg>
-        );
-      case "scissors":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path d="M20 4L8.5 15.5" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M8.5 8.5 20 20" strokeWidth="1.8" strokeLinejoin="round" />
-            <path
-              d="M7.2 12.2a3 3 0 1 1-4.2 4.2 3 3 0 0 1 4.2-4.2Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M7.2 3.6a3 3 0 1 1-4.2 4.2 3 3 0 0 1 4.2-4.2Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-          </svg>
-        );
-      case "hammer":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M15 7l2-2 4 4-2 2"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M14 8l-9 9 2 2 9-9"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M10 6l3 3" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "brush":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M18 2l4 4-9 9-4-4 9-9Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M8 12l-5 5c-1 1-1 3 0 4 1 1 3 1 4 0l5-5"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-          </svg>
-        );
-      case "snow":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path d="M12 2v20" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M4 6l16 12" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M20 6L4 18" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "wash":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M6 3h12v18H6V3Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M9 7h6" strokeWidth="1.8" strokeLinejoin="round" />
-            <path
-              d="M12 11a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-          </svg>
-        );
-      case "engine":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M7 7h10v10H7V7Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M4 10h3M17 10h3M4 14h3M17 14h3"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M9 7V4h6v3" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "phone":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path d="M8 2h8v20H8V2Z" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M11 19h2" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "laptop":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M4 5h16v10H4V5Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M2 19h20" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "tv":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M4 6h16v10H4V6Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M9 20h6" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "clipper":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path d="M7 3h10v6H7V3Z" strokeWidth="1.8" strokeLinejoin="round" />
-            <path
-              d="M6 9h12v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M9 9V6M12 9V6M15 9V6"
-              strokeWidth="1.6"
-              strokeLinejoin="round"
-            />
-          </svg>
-        );
-      case "palette":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M12 3a9 9 0 1 0 0 18h2a3 3 0 0 0 0-6h-1a2 2 0 0 1 0-4h2a3 3 0 0 0 0-6h-3Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M7.5 10.5h0" strokeWidth="3.4" strokeLinecap="round" />
-            <path d="M9.5 7.5h0" strokeWidth="3.4" strokeLinecap="round" />
-            <path d="M14.5 7.5h0" strokeWidth="3.4" strokeLinecap="round" />
-            <path d="M16.5 10.5h0" strokeWidth="3.4" strokeLinecap="round" />
-          </svg>
-        );
-      case "lotus":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M12 22s7-4 7-10c-4 0-7 2-7 5 0-3-3-5-7-5 0 6 7 10 7 10Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M12 17V2" strokeWidth="1.6" strokeLinejoin="round" />
-          </svg>
-        );
-      case "thread":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path d="M7 3h10v6H7V3Z" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M12 9v12" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M9 21h6" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "camera":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M4 7h4l2-2h4l2 2h4v12H4V7Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M12 10a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-          </svg>
-        );
-      case "chef":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M7 10c-2 0-3-1-3-3s2-4 8-4 8 2 8 4-1 3-3 3"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M7 10h10v11H7V10Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-          </svg>
-        );
-      case "confetti":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path d="M4 20l7-7" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M3 14l7 7" strokeWidth="1.8" strokeLinejoin="round" />
-            <path
-              d="M14 3l7 7-9 3 2-10Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M12 12l4 4" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "car":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M6 16l-1-4 2-5h10l2 5-1 4H6Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M7 16v3M17 16v3"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M8 12h8" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "spray":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path d="M9 3h6v4H9V3Z" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M8 7h8v14H8V7Z" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M18 9h3" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M18 12h3" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M18 15h3" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "truck":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M3 7h12v10H3V7Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M15 10h4l2 2v5h-6v-7Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M7 19a1.6 1.6 0 1 0 0 .01"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-            />
-            <path
-              d="M18 19a1.6 1.6 0 1 0 0 .01"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-            />
-          </svg>
-        );
-      case "book":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M4 4h12a2 2 0 0 1 2 2v14H6a2 2 0 0 0-2 2V4Z"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M6 4v16" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "dumbbell":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M7 10v4M17 10v4"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path d="M9 9v6M15 9v6" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M9 12h6" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M5 9v6M19 9v6" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      case "code":
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path d="M9 18l-6-6 6-6" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M15 6l6 6-6 6" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M13 4l-2 16" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-      default:
-        return (
-          <svg
-            className={common}
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path d="M12 2v20" strokeWidth="1.8" strokeLinejoin="round" />
-            <path d="M2 12h20" strokeWidth="1.8" strokeLinejoin="round" />
-          </svg>
-        );
-    }
-  };
-
   const Header = () => (
     <header
       className={[
         "fixed left-0 top-0 z-50 w-full transition-all duration-300",
         scrolled
-          ? "bg-background/80 dark:bg-background/60 backdrop-blur-xl border-b border-border shadow-[0_10px_40px_rgba(0,0,0,0.08)]"
+          ? "bg-white/85 dark:bg-black/70 backdrop-blur-xl border-b border-black/10 dark:border-white/10"
           : "bg-transparent",
       ].join(" ")}
       aria-label="Konvag Header"
@@ -633,13 +117,15 @@ export default function Home() {
         >
           <span className="relative grid h-10 w-10 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
             <span className="font-black tracking-tight">K</span>
-            <span className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-white/20 dark:ring-white/10" />
+            <span className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-white/25 dark:ring-white/10" />
           </span>
 
           <div className="text-left leading-tight">
-            <div className="text-sm font-extrabold tracking-tight">KONVAG</div>
-            <div className="text-xs text-black/60 dark:text-white/60">
-              All services at your fingertips
+            <div className="text-sm font-extrabold tracking-tight text-black dark:text-white">
+              KONVAG
+            </div>
+            <div className="text-xs text-black/55 dark:text-white/55">
+              Premium services marketplace
             </div>
           </div>
         </button>
@@ -654,7 +140,7 @@ export default function Home() {
               key={s.id}
               type="button"
               onClick={() => scrollTo(s.id)}
-              className="rounded-full px-4 py-2 text-sm font-semibold text-black/70 hover:text-black hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition"
+              className="rounded-full px-4 py-2 text-sm font-semibold text-black/70 hover:text-black hover:bg-black/5 transition dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10"
             >
               {s.label}
             </button>
@@ -666,8 +152,8 @@ export default function Home() {
             type="button"
             onClick={() =>
               comingSoon(
-                "Get notified",
-                "Waitlist opens soon. This project is under construction.",
+                "Waitlist",
+                "Waitlist opens soon. This is a premium preview.",
               )
             }
             className="rounded-full px-4 py-2 text-sm font-extrabold bg-primary text-primary-foreground hover:opacity-95 transition shadow-sm"
@@ -678,7 +164,7 @@ export default function Home() {
           <button
             type="button"
             onClick={toggleTheme}
-            className="ml-2 rounded-full px-3 py-2 text-sm font-semibold text-black/70 hover:text-black hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition"
+            className="ml-2 rounded-full px-3 py-2 text-sm font-semibold text-black/70 hover:text-black hover:bg-black/5 transition dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10"
             aria-label="Toggle theme"
             title="Toggle theme"
           >
@@ -691,7 +177,7 @@ export default function Home() {
           <button
             type="button"
             onClick={toggleTheme}
-            className="rounded-full px-3 py-2 text-sm font-semibold text-black/70 hover:text-black hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition"
+            className="rounded-full px-3 py-2 text-sm font-semibold text-black/70 hover:text-black hover:bg-black/5 transition dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10"
             aria-label="Toggle theme"
           >
             {dark ? "🌙" : "☀️"}
@@ -700,7 +186,7 @@ export default function Home() {
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
-            className="rounded-full px-3 py-2 text-sm font-extrabold bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/15 transition"
+            className="rounded-full px-3 py-2 text-sm font-extrabold bg-black/5 hover:bg-black/10 transition dark:bg-white/10 dark:hover:bg-white/15 dark:text-white"
             aria-label="Open menu"
           >
             {menuOpen ? "Close" : "Menu"}
@@ -712,18 +198,18 @@ export default function Home() {
       <div
         className={[
           "md:hidden overflow-hidden transition-all duration-300",
-          menuOpen ? "max-h-[380px] opacity-100" : "max-h-0 opacity-0",
+          menuOpen ? "max-h-[340px] opacity-100" : "max-h-0 opacity-0",
         ].join(" ")}
       >
         <div className="mx-auto max-w-7xl px-4 pb-4 sm:px-6">
-          <div className="rounded-3xl border border-border bg-background/80 backdrop-blur-xl p-3">
+          <div className="rounded-3xl border border-border bg-white/90 dark:bg-black/70 backdrop-blur-xl p-3">
             <div className="grid gap-1">
               {sections.map((s) => (
                 <button
                   key={s.id}
                   type="button"
                   onClick={() => scrollTo(s.id)}
-                  className="w-full rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-black/80 hover:bg-black/5 dark:text-white/80 dark:hover:bg-white/10 transition"
+                  className="w-full rounded-2xl px-4 py-3 text-left text-sm font-extrabold text-black/85 hover:bg-black/5 transition dark:text-white/85 dark:hover:bg-white/10"
                 >
                   {s.label}
                 </button>
@@ -731,9 +217,7 @@ export default function Home() {
 
               <button
                 type="button"
-                onClick={() =>
-                  comingSoon("Join waitlist", "Waitlist opens soon.")
-                }
+                onClick={() => comingSoon("Waitlist", "Waitlist opens soon.")}
                 className="mt-2 w-full rounded-2xl px-4 py-3 text-sm font-extrabold bg-primary text-primary-foreground hover:opacity-95 transition"
               >
                 Join waitlist
@@ -754,261 +238,207 @@ export default function Home() {
 
       <Header />
 
-      <main className="relative overflow-x-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/[0.02] via-black/[0.01] to-background dark:from-white/[0.06] dark:via-white/[0.02] dark:to-background" />
-
-          <div className="absolute inset-0 opacity-45 dark:opacity-35">
-            <img
-              alt="Konvag hero background"
-              src="https://images.unsplash.com/photo-1523413651479-597eb2da0ad6?auto=format&fit=crop&w=2200&q=70"
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-          </div>
-
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent dark:from-background dark:via-background/70 dark:to-transparent" />
-
-          {/* Green glows */}
-          <div className="pointer-events-none absolute -top-28 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full blur-3xl bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.20),transparent_60%)]" />
-          <div className="pointer-events-none absolute -bottom-40 right-[-160px] h-[560px] w-[560px] rounded-full blur-3xl bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.18),transparent_60%)]" />
-        </div>
-
+      <main className="pt-24 sm:pt-28">
         {/* HERO */}
-        <section className="mx-auto max-w-7xl px-4 pt-28 pb-14 sm:px-6 sm:pt-32 lg:pt-36">
-          <div className="grid items-center gap-10 lg:grid-cols-2">
-            {/* Left */}
-            <div className="relative">
-              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-4 py-2 text-xs font-extrabold text-black/80 backdrop-blur dark:text-white/80">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/70 opacity-75" />
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
-                </span>
-                PROJECT IS SERIOUSLY UNDER CONSTRUCTION
-                <span className="ml-2 rounded-full bg-black/5 px-2 py-1 text-[11px] dark:bg-white/10">
-                  Preview
-                </span>
-              </div>
-
-              <h1 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-                Welcome to <span className="text-shine">Konvag</span> —
-                <span className="block mt-2 text-black/80 dark:text-white/85">
-                  all services at your fingertip.
-                </span>
-              </h1>
-
-              <p className="mt-5 max-w-xl text-base leading-7 text-black/70 dark:text-white/70 sm:text-lg">
-                Plumbing, hair dressing, barbing, electrician, cleaning,
-                repairs, logistics, tutoring, events — one sleek platform to
-                find trusted service providers, track requests, and pay
-                securely.
-                <span className="font-semibold">
-                  {" "}
-                  We’re building it properly.
-                </span>
-              </p>
-
-              {/* CTA */}
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <button
-                  type="button"
-                  onClick={() =>
-                    comingSoon(
-                      "App not live yet",
-                      "We’re still building. You’ll be able to book services here soon.",
-                    )
-                  }
-                  className="group relative inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-extrabold text-primary-foreground shadow-sm transition hover:opacity-95 focus-visible:ring-4 focus-visible:ring-ring"
-                >
-                  Get started
-                  <span className="text-primary-foreground/80">→</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => scrollTo("services")}
-                  className="inline-flex h-12 items-center justify-center rounded-full border border-border bg-background/70 px-6 text-sm font-extrabold text-black/80 backdrop-blur transition hover:bg-background focus-visible:ring-4 focus-visible:ring-ring dark:text-white/80"
-                >
-                  Explore services
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    comingSoon(
-                      "Business partners",
-                      "Vendor onboarding opens soon.",
-                    )
-                  }
-                  className="inline-flex h-12 items-center justify-center rounded-full px-4 text-sm font-extrabold text-black/70 hover:text-black hover:bg-black/5 transition dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10"
-                >
-                  Become a vendor
-                </button>
-              </div>
-
-              {/* Progress */}
-              <div className="mt-8 rounded-3xl border border-border bg-background/70 p-5 backdrop-blur">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm font-extrabold text-black/80 dark:text-white/80">
-                    Build status
-                  </div>
-                  <div className="text-xs font-extrabold text-black/60 dark:text-white/60">
-                    Phase 1 • Core platform
-                  </div>
-                </div>
-
-                <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-black/10 dark:bg-white/10">
-                  <div className="h-full w-[72%] rounded-full bg-primary progress-shimmer" />
-                </div>
-
-                <div className="mt-3 flex flex-wrap gap-2 text-xs text-black/60 dark:text-white/60">
-                  <span className="rounded-full bg-black/5 px-2 py-1 dark:bg-white/10">
-                    UI/UX ✓
-                  </span>
-                  <span className="rounded-full bg-black/5 px-2 py-1 dark:bg-white/10">
-                    Services catalog ✓
-                  </span>
-                  <span className="rounded-full bg-black/5 px-2 py-1 dark:bg-white/10">
-                    Bookings ⏳
-                  </span>
-                  <span className="rounded-full bg-black/5 px-2 py-1 dark:bg-white/10">
-                    Payments ⏳
-                  </span>
-                  <span className="rounded-full bg-black/5 px-2 py-1 dark:bg-white/10">
-                    Vendor onboarding ⏳
-                  </span>
-                </div>
-              </div>
+        <section className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="relative overflow-hidden rounded-[32px] border border-border bg-white dark:bg-black shadow-sm">
+            {/* subtle background */}
+            <div className="absolute inset-0 -z-10">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(22,163,74,0.12),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(0,0,0,0.06),transparent_45%)] dark:bg-[radial-gradient(circle_at_20%_20%,rgba(34,197,94,0.18),transparent_45%),radial-gradient(circle_at_80%_30%,rgba(255,255,255,0.08),transparent_45%)]" />
+              <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(to_right,rgba(0,0,0,0.6)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.6)_1px,transparent_1px)] bg-[size:28px_28px] dark:opacity-[0.08]" />
             </div>
 
-            {/* Right */}
-            <div className="relative">
-              <div className="rounded-[28px] border border-border bg-background/60 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden">
-                <div className="relative">
-                  <img
-                    alt="Services collage"
-                    src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1600&q=70"
-                    className="h-56 w-full object-cover sm:h-64"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <div className="text-sm font-semibold text-white">
-                          Smart booking • Clean UI • Verified pros
-                        </div>
-                        <div className="text-xs text-white/70">
-                          Designed to feel premium on every device.
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          comingSoon(
-                            "Demo",
-                            "Product demo video will be available soon.",
-                          )
-                        }
-                        className="rounded-full bg-white/15 px-4 py-2 text-xs font-extrabold text-white backdrop-blur hover:bg-white/20 transition"
-                      >
-                        Watch demo
-                      </button>
-                    </div>
-                  </div>
+            <div className="grid gap-10 p-7 sm:p-10 lg:grid-cols-2 lg:items-center">
+              {/* Left */}
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-white/70 dark:bg-black/40 px-4 py-2 text-xs font-extrabold text-black/70 dark:text-white/70 backdrop-blur">
+                  <span className="inline-block h-2 w-2 rounded-full bg-primary" />
+                  Under construction • Premium preview
                 </div>
 
-                <div className="p-5 sm:p-6">
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <MiniCard
-                      title="One request, many options"
-                      desc="Konvag matches you with the best providers nearby."
-                      badge="Matching"
-                      onClick={() =>
-                        comingSoon(
-                          "Matching",
-                          "Provider matching is in development.",
-                        )
-                      }
-                    />
-                    <MiniCard
-                      title="Transparent pricing"
-                      desc="Clear quotes, no surprises (coming soon)."
-                      badge="Pricing"
-                      onClick={() =>
-                        comingSoon(
-                          "Pricing",
-                          "Quotes and pricing engine is coming soon.",
-                        )
-                      }
-                    />
-                    <MiniCard
-                      title="Track every job"
-                      desc="Progress updates from start to finish."
-                      badge="Tracking"
-                      onClick={() =>
-                        comingSoon("Tracking", "Job tracking is coming soon.")
-                      }
-                    />
-                    <MiniCard
-                      title="Secure payments"
-                      desc="Pay safely when the job is delivered."
-                      badge="Payments"
-                      onClick={() =>
-                        comingSoon(
-                          "Payments",
-                          "Payment integration is coming soon.",
-                        )
-                      }
-                    />
-                  </div>
+                <h1 className="mt-5 text-4xl font-black tracking-tight text-black dark:text-white sm:text-5xl">
+                  Book trusted services —{" "}
+                  <span className="text-shine">fast</span>, clean, and secure.
+                </h1>
 
-                  <div className="mt-5 rounded-2xl border border-border bg-gradient-to-b from-background/70 to-background/40 p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-extrabold text-black/80 dark:text-white/80">
-                        Service spotlight
-                      </div>
-                      <div className="text-xs font-extrabold text-black/60 dark:text-white/60">
-                        Today
-                      </div>
-                    </div>
+                <p className="mt-4 max-w-xl text-base leading-7 text-black/70 dark:text-white/70 sm:text-lg">
+                  Konvag connects you to vetted service providers for home
+                  repairs, beauty, tech fixes, and logistics — with tracking and
+                  secure payments (coming soon).
+                </p>
 
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {[
-                        "Plumbing",
-                        "Hair Dressing",
-                        "Barbing",
-                        "Cleaning",
-                        "Electrician",
-                        "AC Repair",
-                      ].map((t) => (
-                        <span
-                          key={t}
-                          className="rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-extrabold text-black/70 dark:text-white/70"
-                        >
-                          {t}
+                {/* Search */}
+                <div className="mt-6 rounded-2xl border border-border bg-white/70 dark:bg-black/35 backdrop-blur p-3">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <div className="flex-1">
+                      <label className="sr-only" htmlFor="search">
+                        Search services
+                      </label>
+                      <div className="flex items-center gap-3 rounded-2xl border border-border bg-white dark:bg-black px-4 py-3">
+                        <span className="text-black/40 dark:text-white/40">
+                          ⌕
                         </span>
-                      ))}
+                        <input
+                          id="search"
+                          disabled
+                          placeholder="Search for a service (disabled)"
+                          className="w-full bg-transparent text-sm font-semibold text-black/70 dark:text-white/70 placeholder:text-black/35 dark:placeholder:text-white/35 outline-none"
+                        />
+                      </div>
                     </div>
 
                     <button
                       type="button"
                       onClick={() =>
-                        comingSoon("Bookings", "Bookings will be enabled soon.")
+                        comingSoon(
+                          "Search",
+                          "Search will be enabled at launch.",
+                        )
                       }
-                      className="mt-4 w-full rounded-xl bg-primary px-4 py-3 text-sm font-extrabold text-primary-foreground hover:opacity-95 transition focus-visible:ring-4 focus-visible:ring-ring"
+                      className="h-12 rounded-2xl bg-primary px-6 text-sm font-extrabold text-primary-foreground hover:opacity-95 transition"
                     >
-                      Book a service (disabled)
+                      Search
                     </button>
                   </div>
+
+                  {/* Popular */}
+                  <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+                    <span className="font-extrabold text-black/55 dark:text-white/55">
+                      Popular:
+                    </span>
+                    {popular.map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() =>
+                          comingSoon(
+                            "Popular service",
+                            `${t} page opens at launch.`,
+                          )
+                        }
+                        className="rounded-full border border-border bg-white/70 dark:bg-black/30 px-3 py-1 font-extrabold text-black/65 dark:text-white/65 hover:bg-white transition"
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CTAs */}
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      comingSoon("Waitlist", "Waitlist opens soon.")
+                    }
+                    className="inline-flex h-12 items-center justify-center rounded-2xl bg-black px-6 text-sm font-extrabold text-white hover:bg-black/90 transition dark:bg-white dark:text-black dark:hover:bg-white/90"
+                  >
+                    Get notified
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => scrollTo("services")}
+                    className="inline-flex h-12 items-center justify-center rounded-2xl border border-border bg-white/70 dark:bg-black/35 px-6 text-sm font-extrabold text-black/75 dark:text-white/75 hover:bg-white transition"
+                  >
+                    Browse services
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      comingSoon("Vendors", "Vendor onboarding opens soon.")
+                    }
+                    className="inline-flex h-12 items-center justify-center rounded-2xl px-4 text-sm font-extrabold text-primary hover:bg-primary/10 transition"
+                  >
+                    Become a vendor →
+                  </button>
+                </div>
+
+                {/* Trust row */}
+                <div className="mt-7 grid gap-3 sm:grid-cols-3">
+                  <TrustPill
+                    title="Verified pros"
+                    desc="Identity & quality checks"
+                  />
+                  <TrustPill
+                    title="Clear tracking"
+                    desc="Every job documented"
+                  />
+                  <TrustPill title="Secure payments" desc="Pay on completion" />
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-center">
-                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-4 py-2 text-xs font-extrabold text-black/70 backdrop-blur dark:text-white/70">
-                  <span className="inline-block h-2 w-2 rounded-full bg-amber-500" />
-                  Links won’t redirect — everything is locked to this preview.
+              {/* Right */}
+              <div className="relative">
+                <div className="rounded-[28px] border border-border bg-white/70 dark:bg-black/35 backdrop-blur p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-black text-black/80 dark:text-white/80">
+                      Preview flow
+                    </div>
+                    <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-extrabold text-primary">
+                      Coming soon
+                    </span>
+                  </div>
+
+                  <div className="mt-4 grid gap-3">
+                    <MockRow
+                      n="01"
+                      title="Request a service"
+                      desc="Tell us what you need + location"
+                    />
+                    <MockRow
+                      n="02"
+                      title="Get matched"
+                      desc="We show the best providers nearby"
+                    />
+                    <MockRow
+                      n="03"
+                      title="Track + pay"
+                      desc="Progress updates + secure payment"
+                    />
+                  </div>
+
+                  <div className="mt-5 rounded-2xl border border-border bg-white dark:bg-black p-4">
+                    <div className="text-xs font-extrabold text-black/55 dark:text-white/55">
+                      Top categories
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      {topServices.slice(0, 6).map((s) => (
+                        <button
+                          key={s.title}
+                          type="button"
+                          onClick={() =>
+                            comingSoon(
+                              "Category",
+                              `${s.title} opens at launch.`,
+                            )
+                          }
+                          className="flex items-center gap-3 rounded-2xl border border-border bg-white/70 dark:bg-black/35 px-3 py-3 text-left hover:bg-white transition"
+                        >
+                          <span className="grid h-9 w-9 place-items-center rounded-2xl bg-primary/10 text-primary">
+                            <Icon name={s.icon} />
+                          </span>
+                          <span className="text-sm font-extrabold text-black/75 dark:text-white/75">
+                            {s.title}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      comingSoon(
+                        "Download",
+                        "Apps will be available at launch.",
+                      )
+                    }
+                    className="mt-4 w-full rounded-2xl bg-primary px-5 py-3 text-sm font-extrabold text-primary-foreground hover:opacity-95 transition"
+                  >
+                    Get the app (disabled)
+                  </button>
                 </div>
               </div>
             </div>
@@ -1017,342 +447,134 @@ export default function Home() {
 
         {/* SERVICES */}
         <section id="services" className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex items-end justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-black tracking-tight sm:text-3xl">
-                All services in one place
+              <h2 className="text-2xl font-black tracking-tight text-black dark:text-white sm:text-3xl">
+                Browse top services
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-black/65 dark:text-white/65 sm:text-base">
-                From home repairs to beauty and lifestyle — Konvag is designed
-                to become your everyday services hub.
+                Clean categories — no clutter. More services will be added at
+                launch.
               </p>
             </div>
+
             <button
               type="button"
               onClick={() =>
-                comingSoon("Search", "Search will be enabled soon.")
+                comingSoon(
+                  "All services",
+                  "Full services directory opens at launch.",
+                )
               }
-              className="inline-flex h-11 items-center justify-center rounded-full border border-border bg-background px-5 text-sm font-extrabold text-black/80 shadow-sm hover:bg-zinc-50 transition dark:text-white/80 dark:hover:bg-white/10 focus-visible:ring-4 focus-visible:ring-ring"
+              className="hidden sm:inline-flex h-11 items-center justify-center rounded-2xl border border-border bg-white/70 dark:bg-black/35 px-5 text-sm font-extrabold text-black/75 dark:text-white/75 hover:bg-white transition"
             >
-              Search services (disabled)
+              View all
             </button>
           </div>
 
           <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((s) => (
+            {topServices.map((s) => (
               <button
                 key={s.title}
                 type="button"
                 onClick={() =>
-                  comingSoon("Service page", `${s.title} page is coming soon.`)
+                  comingSoon("Service", `${s.title} opens at launch.`)
                 }
-                className="group flex items-center gap-4 rounded-3xl border border-border bg-background/70 p-5 text-left shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-4 focus-visible:ring-ring"
+                className="group flex items-center gap-4 rounded-3xl border border-border bg-white/70 dark:bg-black/35 p-5 text-left shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-4 focus-visible:ring-ring"
               >
                 <div className="grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 text-primary">
                   <Icon name={s.icon} />
                 </div>
+
                 <div className="flex-1">
                   <div className="text-sm font-extrabold tracking-tight text-black/85 dark:text-white/85">
                     {s.title}
                   </div>
-                  <div className="mt-1 text-xs text-black/60 dark:text-white/60">
+                  <div className="mt-1 text-xs text-black/55 dark:text-white/55">
                     Book • Track • Pay (coming soon)
                   </div>
                 </div>
-                <div className="text-black/30 dark:text-white/25">→</div>
+
+                <div className="text-black/25 dark:text-white/25">→</div>
               </button>
             ))}
           </div>
-
-          <div className="mt-10 rounded-[28px] border border-border bg-background/70 p-6 backdrop-blur">
-            <div className="grid gap-6 lg:grid-cols-3">
-              <Stat
-                title="Smart matching"
-                value="Nearby pros"
-                desc="Find verified providers in your area."
-              />
-              <Stat
-                title="Modern experience"
-                value="Fast & sleek"
-                desc="Built to feel premium on every screen."
-              />
-              <Stat
-                title="Trust & safety"
-                value="Protected"
-                desc="Clear records, reviews, and secure payments."
-              />
-            </div>
-          </div>
         </section>
 
-        {/* HOW IT WORKS */}
-        <section id="how" className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-          <div className="rounded-[32px] border border-border bg-gradient-to-b from-background/85 to-background/55 p-7 backdrop-blur sm:p-10">
+        {/* HOW */}
+        <section id="how" className="mx-auto max-w-7xl px-4 pb-14 sm:px-6">
+          <div className="rounded-[32px] border border-border bg-white dark:bg-black p-7 sm:p-10 shadow-sm">
             <div className="flex flex-col gap-2">
-              <h2 className="text-2xl font-black tracking-tight sm:text-3xl">
-                How Konvag will work
+              <h2 className="text-2xl font-black tracking-tight text-black dark:text-white sm:text-3xl">
+                How it works
               </h2>
               <p className="max-w-2xl text-sm leading-6 text-black/65 dark:text-white/65 sm:text-base">
-                Simple flow. Clean UI. Serious delivery.
+                Simple, modern, and built for trust.
               </p>
             </div>
 
             <div className="mt-8 grid gap-4 lg:grid-cols-3">
-              <Step
+              <StepCard
                 n="01"
-                title="Tell us what you need"
-                desc="Choose a service, add details, location and preferred time."
+                title="Request"
+                desc="Choose a service, add details, and your location."
                 onClick={() =>
-                  comingSoon("Requests", "Request flow is coming soon.")
+                  comingSoon("Request", "Request flow opens at launch.")
                 }
               />
-              <Step
+              <StepCard
                 n="02"
-                title="Get matched & quoted"
-                desc="We connect you with providers and show transparent quotes."
-                onClick={() =>
-                  comingSoon("Quotes", "Quotes will be enabled soon.")
-                }
+                title="Match"
+                desc="We connect you to suitable providers with clear quotes."
+                onClick={() => comingSoon("Match", "Matching opens at launch.")}
               />
-              <Step
+              <StepCard
                 n="03"
-                title="Track & complete safely"
-                desc="Follow progress, confirm delivery, and pay securely."
+                title="Complete"
+                desc="Track progress, confirm delivery, then pay securely."
                 onClick={() =>
-                  comingSoon(
-                    "Tracking & payments",
-                    "Tracking and payment release is coming soon.",
-                  )
+                  comingSoon("Complete", "Tracking & payments open at launch.")
                 }
               />
-            </div>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="text-sm text-black/65 dark:text-white/65">
-                Vendor onboarding will include verification, skills screening,
-                and service standards.
-              </div>
-              <button
-                type="button"
-                onClick={() =>
-                  comingSoon(
-                    "Vendor onboarding",
-                    "Vendor onboarding is coming soon.",
-                  )
-                }
-                className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-6 text-sm font-extrabold text-primary-foreground hover:opacity-95 transition focus-visible:ring-4 focus-visible:ring-ring"
-              >
-                Vendor onboarding (disabled)
-              </button>
             </div>
           </div>
         </section>
 
         {/* FEATURES */}
-        <section id="features" className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-            <div>
-              <h2 className="text-2xl font-black tracking-tight sm:text-3xl">
-                Built to feel premium — not messy
-              </h2>
-              <p className="mt-3 max-w-xl text-sm leading-6 text-black/65 dark:text-white/65 sm:text-base">
-                Konvag is designed as a modern services marketplace: clean
-                design, fast booking, transparent records, and a strong trust
-                layer for both clients and providers.
-              </p>
-
-              <div className="mt-6 grid gap-3">
-                <FeatureRow
-                  title="Verified providers"
-                  desc="Identity, skills, and quality checks (coming soon)."
-                  onClick={() =>
-                    comingSoon(
-                      "Verification",
-                      "Provider verification is coming soon.",
-                    )
-                  }
-                />
-                <FeatureRow
-                  title="Job history & receipts"
-                  desc="Everything documented for clarity and accountability."
-                  onClick={() =>
-                    comingSoon(
-                      "Records",
-                      "Receipts and job records are coming soon.",
-                    )
-                  }
-                />
-                <FeatureRow
-                  title="Ratings you can trust"
-                  desc="Real reviews tied to completed jobs only."
-                  onClick={() =>
-                    comingSoon("Reviews", "Reviews system is coming soon.")
-                  }
-                />
-                <FeatureRow
-                  title="Secure payments"
-                  desc="Pay safely with confirmation at completion."
-                  onClick={() =>
-                    comingSoon(
-                      "Payments",
-                      "Payment integration is coming soon.",
-                    )
-                  }
-                />
-              </div>
-
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <button
-                  type="button"
-                  onClick={() =>
-                    comingSoon(
-                      "Mobile apps",
-                      "Android/iOS apps are coming soon.",
-                    )
-                  }
-                  className="inline-flex h-12 items-center justify-center rounded-full bg-primary px-6 text-sm font-extrabold text-primary-foreground hover:opacity-95 transition focus-visible:ring-4 focus-visible:ring-ring"
-                >
-                  Mobile app (coming soon)
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    comingSoon(
-                      "Web platform",
-                      "Full web platform is coming soon.",
-                    )
-                  }
-                  className="inline-flex h-12 items-center justify-center rounded-full border border-border bg-background/70 px-6 text-sm font-extrabold text-black/80 backdrop-blur hover:bg-background transition focus-visible:ring-4 focus-visible:ring-ring dark:text-white/80"
-                >
-                  Web platform (coming soon)
-                </button>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="overflow-hidden rounded-[30px] border border-border bg-background/70 backdrop-blur shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
-                <div className="relative">
-                  <img
-                    alt="Modern workspace"
-                    src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=70"
-                    className="h-60 w-full object-cover sm:h-72"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-                  <div className="absolute bottom-5 left-5 right-5">
-                    <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
-                      <div className="text-sm font-semibold text-white">
-                        A platform you’ll be proud to share.
-                      </div>
-                      <div className="mt-1 text-xs text-white/70">
-                        Clean visuals • Fast UX • Responsive • Built for trust
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          comingSoon(
-                            "Preview pages",
-                            "More pages will be added soon.",
-                          )
-                        }
-                        className="mt-3 inline-flex h-10 items-center justify-center rounded-xl bg-white/15 px-4 text-xs font-extrabold text-white hover:bg-white/20 transition"
-                      >
-                        View preview pages
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <GlassPill label="Request" />
-                    <GlassPill label="Match" />
-                    <GlassPill label="Schedule" />
-                    <GlassPill label="Track" />
-                    <GlassPill label="Complete" />
-                    <GlassPill label="Pay" />
-                  </div>
-
-                  <div className="mt-5 rounded-2xl border border-border bg-background/70 p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="text-sm font-extrabold text-black/85 dark:text-white/85">
-                          Under construction notice
-                        </div>
-                        <div className="mt-1 text-xs leading-5 text-black/60 dark:text-white/60">
-                          This page is a premium placeholder. Real booking
-                          flows, dashboards, and vendor profiles are in
-                          development.
-                        </div>
-                      </div>
-                      <span className="rounded-full bg-amber-500/15 px-3 py-1 text-xs font-extrabold text-amber-700 dark:text-amber-300">
-                        Building
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <ScrollTopFab
-                scrolled={scrolled}
-                onClick={() => scrollTo("top")}
-              />
-            </div>
+        <section id="features" className="mx-auto max-w-7xl px-4 pb-14 sm:px-6">
+          <div className="grid gap-4 lg:grid-cols-3">
+            <FeatureCard
+              title="Verified providers"
+              desc="Identity checks, skill screening, and service standards (coming soon)."
+              onClick={() =>
+                comingSoon("Verification", "Verification launches soon.")
+              }
+            />
+            <FeatureCard
+              title="Records & receipts"
+              desc="Every job documented for clarity, proof, and accountability."
+              onClick={() =>
+                comingSoon("Records", "Records dashboard launches soon.")
+              }
+            />
+            <FeatureCard
+              title="Safe payments"
+              desc="Payment only when the job is confirmed (escrow-style)."
+              onClick={() =>
+                comingSoon("Payments", "Payment integration launches soon.")
+              }
+            />
           </div>
-        </section>
 
-        {/* FAQ */}
-        <section id="faq" className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-          <div className="rounded-[32px] border border-border bg-background/70 backdrop-blur p-7 sm:p-10">
-            <div className="flex flex-col gap-2">
-              <h2 className="text-2xl font-black tracking-tight sm:text-3xl">
-                Quick FAQ
-              </h2>
-              <p className="max-w-2xl text-sm leading-6 text-black/65 dark:text-white/65 sm:text-base">
-                Short answers while we build the full product.
-              </p>
-            </div>
-
-            <div className="mt-7 grid gap-4 lg:grid-cols-2">
-              <FAQ
-                q="Is Konvag live?"
-                a="Not yet. This is a premium under-construction landing page preview."
-                onClick={() =>
-                  comingSoon("Status", "Konvag is still under construction.")
-                }
-              />
-              <FAQ
-                q="What services will be available?"
-                a="Home repairs, beauty, events, tech repairs, logistics, tutoring, and many more."
-                onClick={() =>
-                  comingSoon("Services", "More services will be added soon.")
-                }
-              />
-              <FAQ
-                q="Will providers be verified?"
-                a="Yes. Verification and quality standards are part of the plan (coming soon)."
-                onClick={() =>
-                  comingSoon(
-                    "Verification",
-                    "Verification flow is coming soon.",
-                  )
-                }
-              />
-              <FAQ
-                q="Can I join as a vendor?"
-                a="Vendor onboarding will open soon. For now, everything is disabled."
-                onClick={() =>
-                  comingSoon(
-                    "Vendor onboarding",
-                    "Vendor onboarding opens soon.",
-                  )
-                }
-              />
-            </div>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="text-sm text-black/65 dark:text-white/65">
-                Want updates when launch is near?
+          <div className="mt-6 rounded-[28px] border border-border bg-white dark:bg-black p-7 sm:p-9 shadow-sm">
+            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+              <div>
+                <div className="text-xl font-black tracking-tight text-black dark:text-white">
+                  Want launch updates?
+                </div>
+                <div className="mt-1 text-sm text-black/65 dark:text-white/65">
+                  Join the waitlist — we’ll notify you when booking goes live.
+                </div>
               </div>
 
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
@@ -1360,16 +582,14 @@ export default function Home() {
                   type="email"
                   placeholder="Email (disabled)"
                   disabled
-                  className="h-12 w-full sm:w-72 rounded-2xl border border-border bg-background/70 px-4 text-sm text-black/70 placeholder:text-black/40 shadow-sm outline-none dark:text-white/75 dark:placeholder:text-white/35"
+                  className="h-12 w-full sm:w-80 rounded-2xl border border-border bg-white dark:bg-black px-4 text-sm font-semibold text-black/70 dark:text-white/70 placeholder:text-black/35 dark:placeholder:text-white/35 outline-none"
                 />
                 <button
                   type="button"
-                  onClick={() =>
-                    comingSoon("Waitlist", "Waitlist will be enabled soon.")
-                  }
-                  className="h-12 rounded-2xl bg-primary px-6 text-sm font-extrabold text-primary-foreground hover:opacity-95 transition focus-visible:ring-4 focus-visible:ring-ring"
+                  onClick={() => comingSoon("Waitlist", "Waitlist opens soon.")}
+                  className="h-12 rounded-2xl bg-primary px-6 text-sm font-extrabold text-primary-foreground hover:opacity-95 transition"
                 >
-                  Notify me (disabled)
+                  Notify me
                 </button>
               </div>
             </div>
@@ -1377,40 +597,34 @@ export default function Home() {
         </section>
 
         {/* FOOTER */}
-        <footer className="border-t border-border bg-background/70 backdrop-blur">
+        <footer className="border-t border-border bg-white dark:bg-black">
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-            <div className="grid gap-10 lg:grid-cols-3">
-              <div>
+            <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
+              <div className="max-w-md">
                 <div className="flex items-center gap-3">
                   <div className="grid h-11 w-11 place-items-center rounded-2xl bg-primary text-primary-foreground">
                     <span className="font-black">K</span>
                   </div>
                   <div>
-                    <div className="text-sm font-black tracking-tight">
+                    <div className="text-sm font-black tracking-tight text-black dark:text-white">
                       KONVAG
                     </div>
-                    <div className="text-xs text-black/60 dark:text-white/60">
+                    <div className="text-xs text-black/55 dark:text-white/55">
                       All services at your fingertips
                     </div>
                   </div>
                 </div>
 
-                <p className="mt-4 max-w-sm text-sm leading-6 text-black/65 dark:text-white/65">
-                  This project is under construction. The platform will offer
-                  booking, tracking, and secure payments for everyday services —
-                  delivered with a premium experience.
+                <p className="mt-4 text-sm leading-6 text-black/65 dark:text-white/65">
+                  Premium marketplace for everyday services in Nigeria — under
+                  construction.
                 </p>
 
                 <div className="mt-5 flex flex-wrap gap-2">
-                  {[
-                    "Nigeria-first",
-                    "Mobile-ready",
-                    "Responsive UI",
-                    "Trust-focused",
-                  ].map((t) => (
+                  {["Nigeria-first", "Clean UX", "Trust-focused"].map((t) => (
                     <span
                       key={t}
-                      className="rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-extrabold text-black/70 dark:text-white/70"
+                      className="rounded-full border border-border bg-white/70 dark:bg-black/35 px-3 py-1 text-xs font-extrabold text-black/65 dark:text-white/65"
                     >
                       {t}
                     </span>
@@ -1418,187 +632,112 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="grid gap-6 sm:grid-cols-2 lg:col-span-2">
+              <div className="grid gap-8 sm:grid-cols-2">
                 <FooterCol
                   title="Product"
-                  items={[
-                    "How it works",
-                    "Services",
-                    "Vendors",
-                    "Pricing",
-                    "Security",
-                  ]}
-                  onItem={() =>
-                    comingSoon("Footer link", "This is disabled for now.")
+                  items={["Services", "How it works", "Vendors", "Security"]}
+                  onItem={(it) =>
+                    comingSoon(it, "This link will work at launch.")
                   }
                 />
                 <FooterCol
                   title="Company"
-                  items={["About", "Careers", "Press", "Contact", "Terms"]}
-                  onItem={() =>
-                    comingSoon("Footer link", "This is disabled for now.")
-                  }
-                />
-                <FooterCol
-                  title="Resources"
-                  items={[
-                    "Help center",
-                    "FAQ",
-                    "Community",
-                    "Status",
-                    "Guides",
-                  ]}
-                  onItem={() =>
-                    comingSoon("Footer link", "This is disabled for now.")
-                  }
-                />
-                <FooterCol
-                  title="Social"
-                  items={[
-                    "Instagram",
-                    "X (Twitter)",
-                    "LinkedIn",
-                    "TikTok",
-                    "YouTube",
-                  ]}
-                  onItem={() =>
-                    comingSoon(
-                      "Social",
-                      "Social links will be connected at launch.",
-                    )
+                  items={["About", "Contact", "Terms", "Privacy"]}
+                  onItem={(it) =>
+                    comingSoon(it, "This link will work at launch.")
                   }
                 />
               </div>
             </div>
 
-            <div className="mt-10 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-              <div className="text-xs text-black/60 dark:text-white/60">
-                © {new Date().getFullYear()} Konvag. Under Construction —
-                Premium Preview.
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() =>
-                    comingSoon("Legal", "Legal pages will be available soon.")
-                  }
-                  className="rounded-full px-3 py-2 text-xs font-extrabold text-black/70 hover:bg-black/5 transition dark:text-white/70 dark:hover:bg-white/10"
-                >
-                  Privacy
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    comingSoon("Legal", "Legal pages will be available soon.")
-                  }
-                  className="rounded-full px-3 py-2 text-xs font-extrabold text-black/70 hover:bg-black/5 transition dark:text-white/70 dark:hover:bg-white/10"
-                >
-                  Terms
-                </button>
-              </div>
+            <div className="mt-10 border-t border-border pt-6 text-xs text-black/55 dark:text-white/55">
+              © {new Date().getFullYear()} Konvag. Premium preview.
             </div>
           </div>
         </footer>
-      </main>
 
-      {/* TOAST */}
-      <div
-        className={[
-          "fixed bottom-5 left-1/2 z-[60] w-[min(520px,calc(100%-24px))] -translate-x-1/2 transition-all duration-300",
-          toast.open
-            ? "opacity-100 translate-y-0"
-            : "pointer-events-none opacity-0 translate-y-2",
-        ].join(" ")}
-        role="status"
-        aria-live="polite"
-      >
-        <div className="rounded-2xl border border-border bg-background/80 p-4 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <div className="text-sm font-extrabold text-black/85 dark:text-white/85">
-                {toast.title}
-              </div>
-              {toast.message ? (
-                <div className="mt-1 text-xs leading-5 text-black/60 dark:text-white/60">
-                  {toast.message}
+        {/* TOAST */}
+        <div
+          className={[
+            "fixed bottom-5 left-1/2 z-[60] w-[min(520px,calc(100%-24px))] -translate-x-1/2 transition-all duration-300",
+            toast.open
+              ? "opacity-100 translate-y-0"
+              : "pointer-events-none opacity-0 translate-y-2",
+          ].join(" ")}
+          role="status"
+          aria-live="polite"
+        >
+          <div className="rounded-2xl border border-border bg-white/90 dark:bg-black/75 p-4 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="text-sm font-extrabold text-black/85 dark:text-white/85">
+                  {toast.title}
                 </div>
-              ) : null}
+                {toast.message ? (
+                  <div className="mt-1 text-xs leading-5 text-black/60 dark:text-white/60">
+                    {toast.message}
+                  </div>
+                ) : null}
+              </div>
+              <button
+                type="button"
+                onClick={() => setToast((t) => ({ ...t, open: false }))}
+                className="rounded-xl px-2 py-1 text-xs font-extrabold text-black/55 hover:bg-black/5 transition dark:text-white/55 dark:hover:bg-white/10"
+                aria-label="Close toast"
+              >
+                ✕
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => setToast((t) => ({ ...t, open: false }))}
-              className="rounded-xl px-2 py-1 text-xs font-extrabold text-black/55 hover:bg-black/5 dark:text-white/55 dark:hover:bg-white/10 transition"
-              aria-label="Close toast"
-            >
-              ✕
-            </button>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
 
-/* -------------------- Helpers -------------------- */
+/* -------------------- Small components -------------------- */
 
-function MiniCard({
-  title,
-  desc,
-  badge,
-  onClick,
-}: {
-  title: string;
-  desc: string;
-  badge: string;
-  onClick: () => void;
-}) {
+function TrustPill({ title, desc }: { title: string; desc: string }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group rounded-2xl border border-border bg-background/70 p-4 text-left shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-4 focus-visible:ring-ring"
-    >
-      <div className="flex items-center justify-between gap-3">
-        <div className="text-sm font-extrabold text-black/85 dark:text-white/85">
-          {title}
-        </div>
-        <span className="rounded-full bg-primary/12 px-2 py-1 text-[11px] font-extrabold text-primary">
-          {badge}
-        </span>
-      </div>
-      <div className="mt-1 text-xs leading-5 text-black/60 dark:text-white/60">
-        {desc}
-      </div>
-      <div className="mt-3 text-xs font-extrabold text-black/40 dark:text-white/35">
-        Preview →
-      </div>
-    </button>
-  );
-}
-
-function Stat({
-  title,
-  value,
-  desc,
-}: {
-  title: string;
-  value: string;
-  desc: string;
-}) {
-  return (
-    <div className="rounded-3xl border border-border bg-background/60 p-5">
-      <div className="text-xs font-extrabold text-black/60 dark:text-white/60">
+    <div className="rounded-2xl border border-border bg-white/70 dark:bg-black/35 p-4">
+      <div className="text-sm font-extrabold text-black/80 dark:text-white/80">
         {title}
       </div>
-      <div className="mt-1 text-lg font-black tracking-tight">{value}</div>
-      <div className="mt-1 text-sm text-black/65 dark:text-white/65">
+      <div className="mt-1 text-xs text-black/60 dark:text-white/60">
         {desc}
       </div>
     </div>
   );
 }
 
-function Step({
+function MockRow({
+  n,
+  title,
+  desc,
+}: {
+  n: string;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-border bg-white/70 dark:bg-black/35 p-4">
+      <div className="flex items-center justify-between">
+        <div className="text-xs font-black tracking-widest text-black/40 dark:text-white/40">
+          {n}
+        </div>
+        <span className="text-black/25 dark:text-white/25">→</span>
+      </div>
+      <div className="mt-2 text-sm font-extrabold text-black/80 dark:text-white/80">
+        {title}
+      </div>
+      <div className="mt-1 text-xs text-black/60 dark:text-white/60">
+        {desc}
+      </div>
+    </div>
+  );
+}
+
+function StepCard({
   n,
   title,
   desc,
@@ -1613,15 +752,17 @@ function Step({
     <button
       type="button"
       onClick={onClick}
-      className="group rounded-3xl border border-border bg-background/70 p-6 text-left backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-4 focus-visible:ring-ring"
+      className="group rounded-3xl border border-border bg-white dark:bg-black p-6 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-4 focus-visible:ring-ring"
     >
       <div className="flex items-center justify-between">
         <div className="text-xs font-black tracking-widest text-black/40 dark:text-white/40">
           {n}
         </div>
-        <div className="text-black/30 dark:text-white/25">→</div>
+        <div className="text-black/25 dark:text-white/25">→</div>
       </div>
-      <div className="mt-2 text-base font-black tracking-tight">{title}</div>
+      <div className="mt-2 text-base font-black tracking-tight text-black dark:text-white">
+        {title}
+      </div>
       <div className="mt-2 text-sm leading-6 text-black/65 dark:text-white/65">
         {desc}
       </div>
@@ -1629,7 +770,7 @@ function Step({
   );
 }
 
-function FeatureRow({
+function FeatureCard({
   title,
   desc,
   onClick,
@@ -1642,42 +783,18 @@ function FeatureRow({
     <button
       type="button"
       onClick={onClick}
-      className="group flex w-full items-start gap-3 rounded-3xl border border-border bg-background/70 p-5 text-left backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-4 focus-visible:ring-ring"
+      className="rounded-3xl border border-border bg-white dark:bg-black p-7 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-4 focus-visible:ring-ring"
     >
-      <div className="mt-1 h-2.5 w-2.5 rounded-full bg-primary" />
-      <div className="flex-1">
-        <div className="text-sm font-black tracking-tight">{title}</div>
-        <div className="mt-1 text-sm leading-6 text-black/65 dark:text-white/65">
-          {desc}
+      <div className="inline-flex items-center gap-2">
+        <span className="inline-block h-2 w-2 rounded-full bg-primary" />
+        <div className="text-base font-black text-black dark:text-white">
+          {title}
         </div>
       </div>
-      <div className="text-black/30 dark:text-white/25">→</div>
-    </button>
-  );
-}
-
-function GlassPill({ label }: { label: string }) {
-  return (
-    <div className="rounded-2xl border border-border bg-background/70 px-4 py-3 text-center text-xs font-black text-black/70 dark:text-white/70">
-      {label}
-    </div>
-  );
-}
-
-function FAQ({ q, a, onClick }: { q: string; a: string; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group rounded-3xl border border-border bg-background/70 p-6 text-left backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-4 focus-visible:ring-ring"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="text-sm font-black tracking-tight">{q}</div>
-        <div className="text-black/30 dark:text-white/25">→</div>
-      </div>
       <div className="mt-2 text-sm leading-6 text-black/65 dark:text-white/65">
-        {a}
+        {desc}
       </div>
+      <div className="mt-4 text-xs font-extrabold text-primary">Preview →</div>
     </button>
   );
 }
@@ -1693,7 +810,9 @@ function FooterCol({
 }) {
   return (
     <div>
-      <div className="text-sm font-black tracking-tight">{title}</div>
+      <div className="text-sm font-black tracking-tight text-black dark:text-white">
+        {title}
+      </div>
       <div className="mt-4 grid gap-2">
         {items.map((it) => (
           <button
@@ -1710,30 +829,241 @@ function FooterCol({
   );
 }
 
-function ScrollTopFab({
-  scrolled,
-  onClick,
-}: {
-  scrolled: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={[
-        "fixed right-4 bottom-20 sm:right-6 sm:bottom-8 z-40 rounded-full border border-border bg-background/80 backdrop-blur px-4 py-3 text-sm font-black text-black/75 shadow-md transition-all duration-300 dark:text-white/75",
-        scrolled
-          ? "opacity-100 translate-y-0"
-          : "pointer-events-none opacity-0 translate-y-2",
-      ].join(" ")}
-      aria-label="Scroll to top"
-      title="Scroll to top"
-    >
-      ↑ Top
-    </button>
-  );
+/* -------------------- Icons (tiny inline set) -------------------- */
+
+function Icon({ name }: { name: string }) {
+  const common = "stroke-current";
+  switch (name) {
+    case "bolt":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M13 2L3 14h9l-1 8 10-12h-9l1-8Z"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "droplet":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 2s7 7.3 7 13a7 7 0 1 1-14 0c0-5.7 7-13 7-13Z"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "sparkles":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 2l1.2 5.1L18 8.3l-4.8 1.2L12 14l-1.2-4.5L6 8.3l4.8-1.2L12 2Z"
+            strokeWidth="1.6"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M19 13l.7 3 3 1-3 1-.7 3-.7-3-3-1 3-1 .7-3Z"
+            strokeWidth="1.6"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "snow":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M12 2v20" strokeWidth="1.8" strokeLinejoin="round" />
+          <path d="M4 6l16 12" strokeWidth="1.8" strokeLinejoin="round" />
+          <path d="M20 6L4 18" strokeWidth="1.8" strokeLinejoin="round" />
+        </svg>
+      );
+    case "engine":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M7 7h10v10H7V7Z" strokeWidth="1.8" strokeLinejoin="round" />
+          <path
+            d="M4 10h3M17 10h3M4 14h3M17 14h3"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+          <path d="M9 7V4h6v3" strokeWidth="1.8" strokeLinejoin="round" />
+        </svg>
+      );
+    case "laptop":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M4 5h16v10H4V5Z" strokeWidth="1.8" strokeLinejoin="round" />
+          <path d="M2 19h20" strokeWidth="1.8" strokeLinejoin="round" />
+        </svg>
+      );
+    case "phone":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M8 2h8v20H8V2Z" strokeWidth="1.8" strokeLinejoin="round" />
+          <path d="M11 19h2" strokeWidth="1.8" strokeLinejoin="round" />
+        </svg>
+      );
+    case "shield":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 2l8 4v7c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4Z"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+          <path d="M9 12l2 2 4-5" strokeWidth="1.8" strokeLinejoin="round" />
+        </svg>
+      );
+    case "scissors":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M20 4L8.5 15.5" strokeWidth="1.8" strokeLinejoin="round" />
+          <path d="M8.5 8.5 20 20" strokeWidth="1.8" strokeLinejoin="round" />
+          <path
+            d="M7.2 12.2a3 3 0 1 1-4.2 4.2 3 3 0 0 1 4.2-4.2Z"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "clipper":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M7 3h10v6H7V3Z" strokeWidth="1.8" strokeLinejoin="round" />
+          <path
+            d="M6 9h12v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9Z"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M9 9V6M12 9V6M15 9V6"
+            strokeWidth="1.6"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "palette":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 3a9 9 0 1 0 0 18h2a3 3 0 0 0 0-6h-1a2 2 0 0 1 0-4h2a3 3 0 0 0 0-6h-3Z"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+          <path d="M7.5 10.5h0" strokeWidth="3.4" strokeLinecap="round" />
+          <path d="M9.5 7.5h0" strokeWidth="3.4" strokeLinecap="round" />
+        </svg>
+      );
+    case "truck":
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M3 7h12v10H3V7Z" strokeWidth="1.8" strokeLinejoin="round" />
+          <path
+            d="M15 10h4l2 2v5h-6v-7Z"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M7 19a1.6 1.6 0 1 0 0 .01"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+          />
+          <path
+            d="M18 19a1.6 1.6 0 1 0 0 .01"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+    default:
+      return (
+        <svg
+          className={common}
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M12 2v20" strokeWidth="1.8" strokeLinejoin="round" />
+          <path d="M2 12h20" strokeWidth="1.8" strokeLinejoin="round" />
+        </svg>
+      );
+  }
 }
+
+/* -------------------- Styles -------------------- */
 
 function GlobalStyles() {
   return (
@@ -1747,16 +1077,15 @@ function GlobalStyles() {
         background: linear-gradient(
           90deg,
           rgba(22, 163, 74, 1),
-          rgba(34, 197, 94, 0.65),
+          rgba(34, 197, 94, 0.7),
           rgba(22, 163, 74, 1)
         );
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
         background-size: 200% 100%;
-        animation: shine 3.5s ease-in-out infinite;
+        animation: shine 3.2s ease-in-out infinite;
       }
-
       @keyframes shine {
         0% {
           background-position: 0% 50%;
@@ -1766,35 +1095,6 @@ function GlobalStyles() {
         }
         100% {
           background-position: 0% 50%;
-        }
-      }
-
-      /* Progress shimmer */
-      .progress-shimmer {
-        position: relative;
-        overflow: hidden;
-      }
-      .progress-shimmer::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        transform: translateX(-60%);
-        background: linear-gradient(
-          90deg,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0.22) 50%,
-          rgba(255, 255, 255, 0) 100%
-        );
-        animation: shimmer 1.6s linear infinite;
-        mix-blend-mode: overlay;
-      }
-
-      @keyframes shimmer {
-        0% {
-          transform: translateX(-60%);
-        }
-        100% {
-          transform: translateX(60%);
         }
       }
     `}</style>
